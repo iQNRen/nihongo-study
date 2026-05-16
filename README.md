@@ -1,6 +1,6 @@
 # Nihongo Study
 
-一个简洁优雅的日语学习 Web 应用。纯前端实现，零依赖，无需构建工具或服务器。
+一个简洁优雅的日语学习 Web 应用。纯前端实现，零依赖，无需构建工具。
 
 ## 功能
 
@@ -17,38 +17,50 @@
 
 ## 使用方式
 
-直接在浏览器中打开 `index.html` 即可，无需安装任何依赖。
+项目使用 ES Modules，需要通过本地 HTTP 服务器启动（直接双击打开会因 CORS 限制导致模块加载失败）。
 
 ```bash
-# macOS
-open index.html
+# 使用 npx（无需全局安装）
+npx http-server . -p 3000 -c-1
 
-# Linux
-xdg-open index.html
+# 或使用 Python 内置服务器
+python3 -m http.server 3000
 
-# Windows
-start index.html
+# 或使用 VS Code 的 Live Server 插件
 ```
+
+然后访问 `http://localhost:3000` 即可。
 
 ## 项目结构
 
 ```
-├── index.html                # 入口页面
-├── src/
-│   ├── css/
-│   │   └── style.css         # 样式（CSS 变量主题）
-│   └── js/
-│       ├── core.js           # 应用入口、状态管理、鼠标粒子特效
-│       ├── modules/
-│       │   ├── gojuon.js     # 五十音图模块
-│       │   ├── words.js      # 单词模块
-│       │   ├── sentences.js  # 句子模块
-│       │   ├── quiz.js       # 测试模块
-│       │   └── speech.js     # 语音合成模块
-│       └── data/
-│           ├── words/        # 单词数据（按分类）
-│           └── sentences/    # 句子数据（按场景）
-└── README.md
+├── index.html                  # 入口页面
+├── README.md
+└── src/
+    ├── css/
+    │   └── style.css           # 全局样式（和风配色主题）
+    └── js/
+        ├── core.js             # 应用入口、Tab 路由、暗色模式、粒子特效
+        ├── modules/
+        │   ├── gojuon.js       # 五十音图渲染
+        │   ├── words.js        # 单词浏览（搜索/分页/收藏）
+        │   ├── sentences.js    # 句子浏览（搜索/分页/收藏）
+        │   ├── quiz.js         # 测试（5 种模式 + 错题本）
+        │   └── speech.js       # 语音合成（Google TTS + Web Speech API）
+        └── data/
+            ├── words/          # 单词数据
+            │   ├── index.js    # 汇总导出
+            │   ├── food.js     # 食物
+            │   ├── animals.js  # 动物
+            │   ├── family.js   # 家庭
+            │   ├── verbs.js    # 动词
+            │   └── ...         # 共 18 个分类
+            └── sentences/      # 句子数据
+                ├── index.js    # 汇总导出
+                ├── greetings.js # 问候
+                ├── daily.js    # 日常
+                ├── travel.js   # 旅行
+                └── ...         # 共 9 个场景
 ```
 
 ## 特性
