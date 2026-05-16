@@ -130,6 +130,85 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // Cursor particles
+        const canvas = document.getElementById('cursor-particles');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            const MAX = 50;
+            const pool = Array.from({ length: MAX }, () => ({ alive: false }));
+            let count = 0;
+            let mouseX = -999, mouseY = -999;
+            let prevMX = -999, prevMY = -999;
+            let tick = 0;
+
+            const COLORS = ['#2A9D8F', '#C4956A', '#8A9AAA'];
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            function spawn(x, y) {
+                for (let i = 0; i < MAX; i++) {
+                    if (!pool[i].alive) {
+                        const p = pool[i];
+                        p.x = x;
+                        p.y = y;
+                        const a = Math.random() * 6.283;
+                        const s = 0.3 + Math.random() * 1;
+                        p.vx = Math.cos(a) * s;
+                        p.vy = Math.sin(a) * s - 0.4;
+                        p.life = 1;
+                        p.decay = 0.012 + Math.random() * 0.018;
+                        p.size = 1.5 + Math.random() * 2.5;
+                        p.color = COLORS[(Math.random() * 3) | 0];
+                        p.alive = true;
+                        if (++count >= MAX) count = MAX;
+                        return;
+                    }
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                tick++;
+
+                const moved = Math.abs(mouseX - prevMX) + Math.abs(mouseY - prevMY) > 2;
+                if (moved && tick % 3 === 0 && mouseX > 0) {
+                    spawn(mouseX + (Math.random() - 0.5) * 6, mouseY + (Math.random() - 0.5) * 6);
+                    prevMX = mouseX;
+                    prevMY = mouseY;
+                }
+
+                for (let i = 0; i < MAX; i++) {
+                    const p = pool[i];
+                    if (!p.alive) continue;
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.01;
+                    p.life -= p.decay;
+                    if (p.life <= 0) { p.alive = false; count--; continue; }
+
+                    ctx.globalAlpha = p.life * 0.5;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.size * p.life, 0, 6.283);
+                    ctx.fill();
+                }
+
+                ctx.globalAlpha = 1;
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
         // Close custom selects when clicking outside
         document.addEventListener('click', () => {
             document.querySelectorAll('.custom-select.open').forEach(el => {
