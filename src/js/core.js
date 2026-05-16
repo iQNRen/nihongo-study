@@ -55,6 +55,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         switchTab('gojuon');
         console.log("Application ready!");
 
+        // Header particles
+        const particlesContainer = document.getElementById('header-particles');
+        if (particlesContainer) {
+            for (let i = 0; i < 18; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.setProperty('--duration', (6 + Math.random() * 8) + 's');
+                p.style.setProperty('--delay', (Math.random() * 10) + 's');
+                p.style.setProperty('--dx', (Math.random() * 200 - 100) + 'px');
+                p.style.setProperty('--dy', (-50 - Math.random() * 150) + 'px');
+                p.style.setProperty('--max-opacity', (0.2 + Math.random() * 0.4).toFixed(2));
+                p.style.left = Math.random() * 100 + '%';
+                p.style.top = 40 + Math.random() * 50 + '%';
+                p.style.width = (3 + Math.random() * 5) + 'px';
+                p.style.height = p.style.width;
+                particlesContainer.appendChild(p);
+            }
+        }
+
+        // Back to top button
+        const backToTop = document.getElementById('back-to-top');
+        if (backToTop) {
+            window.addEventListener('scroll', () => {
+                backToTop.classList.toggle('visible', window.scrollY > 400);
+            });
+            backToTop.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        }
+
     } catch (error) {
         console.error("CRITICAL ERROR during initialization:", error);
         alert("An error occurred while starting the application. Please check the console (F12) for details.");
