@@ -16,9 +16,15 @@ export class WordManager {
         this.currentSearch = '';
     }
 
+    async loadData() {
+        if (this.allWords.length === 0) {
+            this.allWords = await loadWords();
+            this.filteredWords = [...this.allWords];
+        }
+    }
+
     async init() {
-        this.allWords = await loadWords();
-        this.filteredWords = [...this.allWords];
+        await this.loadData();
         this.renderFilters();
         this.renderList();
     }

@@ -50,6 +50,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        // Preload data for quiz
+        wordManager.loadData();
+
         // Initial Render
         console.log("Performing initial render...");
         switchTab('gojuon');
