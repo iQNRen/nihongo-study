@@ -512,6 +512,12 @@ nav {
     position: relative;
 }
 
+.select-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
 .select-icon {
     width: 16px;
     height: 16px;
