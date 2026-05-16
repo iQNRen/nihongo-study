@@ -1668,6 +1668,100 @@ nav {
 }
 
 /* ============================================
+   FOOTER
+   ============================================ */
+.site-footer {
+    margin-top: 3rem;
+    border-top: 1px solid var(--border);
+    background: var(--card-bg);
+    padding: 2rem 1.5rem 1rem;
+}
+
+.footer-content {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.footer-title {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--text);
+    letter-spacing: 0.08em;
+}
+
+.footer-sub {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.footer-info {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.footer-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.footer-link {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-light);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.footer-link:hover {
+    color: var(--text);
+}
+
+.footer-link svg {
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.footer-link:hover svg {
+    opacity: 1;
+}
+
+.footer-bottom {
+    max-width: 1000px;
+    margin: 1.2rem auto 0;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.dark .site-footer {
+    background: var(--bg-alt);
+}
+
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+}
+
+/* ============================================
    DARK MODE
    ============================================ */
 .dark {
