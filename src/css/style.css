@@ -518,18 +518,33 @@ nav {
     white-space: nowrap;
 }
 
-.filter-icon {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-    color: var(--kitsune);
-    opacity: 0.6;
-    transition: color 0.3s, opacity 0.3s;
-    align-self: center;
+.select-text.placeholder {
+    color: #A0A0A0;
+    font-weight: 400;
 }
 
-.controls-area:hover .filter-icon {
-    opacity: 1;
+.select-reset {
+    display: none;
+    position: absolute;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(26, 26, 46, 0.08);
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    z-index: 1;
+}
+
+.select-reset:hover {
+    background: var(--beni-aka);
+    color: white;
 }
 
 /* Brush-wave arrow */

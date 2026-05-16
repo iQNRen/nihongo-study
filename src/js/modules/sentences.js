@@ -11,7 +11,7 @@ export class SentenceManager {
         this.filteredSentences = [];
         this.currentPage = 1;
         this.itemsPerPage = 30;
-        this.currentCategory = 'all';
+        this.currentCategory = null;
         this.currentSearch = '';
     }
 
@@ -29,14 +29,25 @@ export class SentenceManager {
         const categories = [...new Set(this.allSentences.map(s => s.category))];
         const optionsContainer = selectEl.querySelector('.custom-select-options');
         const trigger = selectEl.querySelector('.custom-select-trigger');
+        const resetBtn = selectEl.querySelector('.select-reset');
         optionsContainer.innerHTML = '';
 
-        // Default to first category
-        if (!categories.includes(this.currentCategory)) {
-            this.currentCategory = categories[0] || 'all';
-        }
-        trigger.querySelector('.select-text').innerText = this.currentCategory;
-        selectEl.dataset.value = this.currentCategory;
+        // Update trigger display
+        const updateTrigger = () => {
+            const textEl = trigger.querySelector('.select-text');
+            if (this.currentCategory) {
+                textEl.innerText = this.currentCategory;
+                textEl.classList.remove('placeholder');
+                selectEl.dataset.value = this.currentCategory;
+                resetBtn.style.display = 'inline';
+            } else {
+                textEl.innerText = '全部';
+                textEl.classList.add('placeholder');
+                selectEl.dataset.value = '';
+                resetBtn.style.display = 'none';
+            }
+        };
+        updateTrigger();
 
         categories.forEach(cat => {
             const opt = document.createElement('div');
@@ -45,8 +56,7 @@ export class SentenceManager {
             opt.innerText = cat;
             opt.addEventListener('click', () => {
                 this.currentCategory = cat;
-                selectEl.dataset.value = cat;
-                trigger.querySelector('.select-text').innerText = cat;
+                updateTrigger();
                 selectEl.classList.remove('open');
                 optionsContainer.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
@@ -56,8 +66,20 @@ export class SentenceManager {
             optionsContainer.appendChild(opt);
         });
 
+        // Reset button
+        resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.currentCategory = null;
+            updateTrigger();
+            optionsContainer.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
+            selectEl.classList.remove('open');
+            this.currentPage = 1;
+            this.applyFilters();
+        });
+
         // Toggle dropdown
         trigger.addEventListener('click', (e) => {
+            if (e.target === resetBtn) return;
             e.stopPropagation();
             document.querySelectorAll('.custom-select.open').forEach(el => {
                 if (el !== selectEl) el.classList.remove('open');
@@ -81,7 +103,7 @@ export class SentenceManager {
                                 s.kana.includes(this.currentSearch) ||
                                 s.en.toLowerCase().includes(this.currentSearch) ||
                                 s.cn.includes(this.currentSearch);
-            const matchesCat = s.category === this.currentCategory;
+            const matchesCat = !this.currentCategory || s.category === this.currentCategory;
             return matchesSearch && matchesCat;
         });
         this.currentPage = 1;
