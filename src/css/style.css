@@ -78,6 +78,11 @@ body {
     font-family: var(--font-body);
     line-height: 1.7;
     min-height: 100vh;
+<<<<<<< HEAD
+=======
+    display: flex;
+    flex-direction: column;
+>>>>>>> 5ad915dca614c38805959cfcddc214b616d70c22
     -webkit-font-smoothing: antialiased;
 }
 
@@ -1670,7 +1675,7 @@ nav {
    FOOTER
    ============================================ */
 .site-footer {
-    margin-top: 3rem;
+    margin-top: auto;
     border-top: 1px solid var(--border);
     background: var(--card-bg);
     padding: 2rem 1.5rem 1rem;
