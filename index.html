@@ -101,33 +101,126 @@
 
         <!-- 测试 Panel -->
         <section id="quiz" class="panel">
-            <div id="quiz-setup" class="quiz-card">
-                <h2>选择测试模式</h2>
-                <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 1.5rem;">
-                    <button class="btn" onclick="window.quizManager.startQuiz('jp-cn')">日文 -> 中文</button>
-                    <button class="btn" onclick="window.quizManager.startQuiz('jp-en')">日文 -> 英文</button>
-                    <button class="btn" onclick="window.quizManager.startQuiz('en-jp')">英文 -> 日文</button>
-                    <button class="btn" onclick="window.quizManager.startQuiz('roma-jp')">罗马音 -> 日文</button>
-                    <button class="btn btn-accent" onclick="window.quizManager.startMemTest()">发音记忆测试 (50题)</button>
+
+            <!-- Setup -->
+            <div id="quiz-setup">
+                <div class="quiz-setup-header">
+                    <h2>选择练习模式</h2>
+                    <p class="quiz-setup-sub">选择题型和题量，开始练习</p>
+                </div>
+
+                <div class="quiz-modes">
+                    <div class="quiz-mode-card" data-mode="jp-cn" onclick="window.quizManager.selectMode('jp-cn')">
+                        <div class="quiz-mode-icon">あ</div>
+                        <div class="quiz-mode-info">
+                            <h3>看日选中</h3>
+                            <p>看日语单词，选中文意思</p>
+                        </div>
+                        <span class="quiz-mode-difficulty difficulty-easy">简单</span>
+                    </div>
+
+                    <div class="quiz-mode-card" data-mode="cn-jp" onclick="window.quizManager.selectMode('cn-jp')">
+                        <div class="quiz-mode-icon">汉</div>
+                        <div class="quiz-mode-info">
+                            <h3>看中选日</h3>
+                            <p>看中文意思，选日语单词</p>
+                        </div>
+                        <span class="quiz-mode-difficulty difficulty-medium">中等</span>
+                    </div>
+
+                    <div class="quiz-mode-card" data-mode="listen" onclick="window.quizManager.selectMode('listen')">
+                        <div class="quiz-mode-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                        </div>
+                        <div class="quiz-mode-info">
+                            <h3>听音选词</h3>
+                            <p>听发音，选出正确的日语单词</p>
+                        </div>
+                        <span class="quiz-mode-difficulty difficulty-medium">中等</span>
+                    </div>
+
+                    <div class="quiz-mode-card" data-mode="kana" onclick="window.quizManager.selectMode('kana')">
+                        <div class="quiz-mode-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                        </div>
+                        <div class="quiz-mode-info">
+                            <h3>假名识读</h3>
+                            <p>看假名，选正确的罗马音读法</p>
+                        </div>
+                        <span class="quiz-mode-difficulty difficulty-easy">简单</span>
+                    </div>
+
+                    <div class="quiz-mode-card" data-mode="spell" onclick="window.quizManager.selectMode('spell')">
+                        <div class="quiz-mode-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="28" height="28"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        </div>
+                        <div class="quiz-mode-info">
+                            <h3>拼写挑战</h3>
+                            <p>根据中文意思，拼出日语单词</p>
+                        </div>
+                        <span class="quiz-mode-difficulty difficulty-hard">困难</span>
+                    </div>
+                </div>
+
+                <!-- Question count & start (hidden until mode selected) -->
+                <div id="quiz-start-area" class="quiz-start-area" style="display:none;">
+                    <div class="quiz-count-selector">
+                        <span class="quiz-count-label">题量</span>
+                        <div class="quiz-count-btns">
+                            <button class="quiz-count-btn" data-count="10" onclick="window.quizManager.setCount(10)">10</button>
+                            <button class="quiz-count-btn active" data-count="20" onclick="window.quizManager.setCount(20)">20</button>
+                            <button class="quiz-count-btn" data-count="30" onclick="window.quizManager.setCount(30)">30</button>
+                            <button class="quiz-count-btn" data-count="50" onclick="window.quizManager.setCount(50)">50</button>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary quiz-start-btn" onclick="window.quizManager.startSelected()">开始练习</button>
                 </div>
             </div>
 
-            <div id="quiz-active" class="quiz-card" style="display: none;">
-                <div id="quiz-progress" style="margin-bottom: 0.5rem; color: var(--text-light); font-size: 0.85rem;"></div>
-                <div class="quiz-question" id="quiz-q-text">?</div>
-                <div class="quiz-options" id="quiz-options" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
-                    <!-- Generated via JS -->
+            <!-- Active Quiz -->
+            <div id="quiz-active" style="display: none;">
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill" id="quiz-progress-fill"></div>
                 </div>
-                <div style="margin-top: 2rem;">
-                    <button class="btn btn-secondary" onclick="window.quizManager.exitQuiz()">退出测试</button>
+                <div class="quiz-progress-text" id="quiz-progress-text"></div>
+                <div class="quiz-card">
+                    <div class="quiz-question" id="quiz-q-text">?</div>
+                    <div id="quiz-hint" class="quiz-hint" style="display:none;"></div>
+                    <div class="quiz-options" id="quiz-options">
+                        <!-- Generated via JS -->
+                    </div>
+                    <div id="quiz-input-area" style="display:none;">
+                        <input type="text" id="quiz-input" class="quiz-input" placeholder="输入日语单词...">
+                        <button class="btn btn-primary" onclick="window.quizManager.submitInput()" style="margin-top:0.8rem; width:100%;">确认</button>
+                    </div>
+                    <div style="margin-top: 2rem; text-align: center;">
+                        <button class="btn btn-secondary" onclick="window.quizManager.exitQuiz()">退出测试</button>
+                    </div>
                 </div>
             </div>
 
-            <div id="quiz-result" class="quiz-card" style="display: none;">
-                <h2>测试结果</h2>
-                <div id="result-score" style="font-size: 2.5rem; margin: 1.5rem 0; font-family: var(--font-display); font-weight: 900; color: var(--asagi);"></div>
-                <button class="btn btn-primary" onclick="window.quizManager.exitQuiz()">返回菜单</button>
+            <!-- Result -->
+            <div id="quiz-result" style="display: none;">
+                <div class="quiz-card" style="text-align: center;">
+                    <h2>测试完成</h2>
+                    <div class="result-circle">
+                        <svg viewBox="0 0 120 120" class="result-ring">
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--border)" stroke-width="8"/>
+                            <circle cx="60" cy="60" r="52" fill="none" stroke="var(--asagi)" stroke-width="8"
+                                stroke-dasharray="327" stroke-dashoffset="327" stroke-linecap="round"
+                                id="result-ring-fill" transform="rotate(-90 60 60)"/>
+                        </svg>
+                        <span class="result-percent" id="result-percent">0%</span>
+                    </div>
+                    <div class="result-stats" id="result-stats"></div>
+                    <div style="display: flex; gap: 0.8rem; justify-content: center; margin-top: 1.5rem;">
+                        <button class="btn btn-secondary" onclick="window.quizManager.exitQuiz()">返回菜单</button>
+                        <button class="btn btn-primary" onclick="window.quizManager.retryQuiz()">再来一次</button>
+                    </div>
+                </div>
+                <div id="result-review" class="result-review"></div>
             </div>
+
         </section>
 
     </div>
