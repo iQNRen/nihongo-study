@@ -39,7 +39,7 @@ export class SentenceManager {
             opt.addEventListener('click', () => {
                 this.currentCategory = cat;
                 selectEl.dataset.value = cat;
-                trigger.innerText = cat === 'all' ? '全部分类' : cat;
+                trigger.querySelector('.select-text').innerText = cat === 'all' ? '全部分类' : cat;
                 selectEl.classList.remove('open');
                 optionsContainer.querySelectorAll('.custom-select-option').forEach(o => o.classList.remove('selected'));
                 opt.classList.add('selected');
