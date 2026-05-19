@@ -90,8 +90,7 @@ export class QuizManager {
         // Show hint for listen mode
         if (this.currentMode === 'listen') {
             hintEl.style.display = 'block';
-            hintEl.innerText = '点击选项播放发音';
-            this.speech.speak(q.kana);
+            hintEl.innerText = '点击发音按钮或选项播放发音';
         } else if (this.currentMode === 'kana') {
             hintEl.style.display = 'block';
             hintEl.innerText = '选择正确的罗马音读法';
@@ -140,17 +139,14 @@ export class QuizManager {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
             btn.innerText = opt;
-            btn.onclick = () => this._handleAnswer(opt, q.a, btn);
-            optionsEl.appendChild(btn);
-
-            // Play audio for listen mode options
-            if (this.currentMode === 'listen') {
-                btn.addEventListener('click', () => {
-                    // Find the word to get kana for this option
+            btn.onclick = () => {
+                if (this.currentMode === 'listen') {
                     const word = window.wordManager.allWords.find(w => w.jp === opt);
                     if (word) this.speech.speak(word.kana);
-                });
-            }
+                }
+                this._handleAnswer(opt, q.a, btn);
+            };
+            optionsEl.appendChild(btn);
         });
     }
 

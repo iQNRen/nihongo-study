@@ -4,7 +4,7 @@
 
 export class SpeechEngine {
     constructor() {
-        this.voiceType = 'google'; // 'google', 'female', 'male'
+        this.voiceType = 'auto';
         this.voices = [];
     }
 
@@ -12,7 +12,6 @@ export class SpeechEngine {
         return new Promise((resolve) => {
             if ('speechSynthesis' in window) {
                 this.voices = window.speechSynthesis.getVoices();
-                // SpeechSynthesis.getVoices() is async in some browsers
                 if (this.voices.length === 0) {
                     window.speechSynthesis.onvoiceschanged = () => {
                         this.voices = window.speechSynthesis.getVoices();
@@ -34,21 +33,7 @@ export class SpeechEngine {
 
     speak(text) {
         if (!text) return;
-
-        if (this.voiceType === 'google') {
-            this._speakGoogle(text);
-        } else {
-            this._speakSystem(text);
-        }
-    }
-
-    _speakGoogle(text) {
-        const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(text)}&tl=ja&client=tw-ob`;
-        const audio = new Audio(url);
-        audio.play().catch(e => {
-            console.error("Google TTS failed, falling back...", e);
-            this._speakSystem(text);
-        });
+        this._speakSystem(text);
     }
 
     _speakSystem(text) {
@@ -57,17 +42,16 @@ export class SpeechEngine {
         const utterance = new SpeechSynthesisUtterance(text);
         utterance.lang = 'ja-JP';
 
-        // Apply gender heuristics
-        const voices = window.speechSynthesis.getVoices();
+        const voices = this.voices.length ? this.voices : window.speechSynthesis.getVoices();
         if (this.voiceType === 'female') {
-            const femaleVoice = voices.find(v => 
-                v.lang.startsWith('ja') && 
+            const femaleVoice = voices.find(v =>
+                v.lang.startsWith('ja') &&
                 (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('nanami') || v.name.toLowerCase().includes('kyoko'))
             );
             if (femaleVoice) utterance.voice = femaleVoice;
         } else if (this.voiceType === 'male') {
-            const maleVoice = voices.find(v => 
-                v.lang.startsWith('ja') && 
+            const maleVoice = voices.find(v =>
+                v.lang.startsWith('ja') &&
                 (v.name.toLowerCase().includes('male') || v.name.toLowerCase().includes('takumi'))
             );
             if (maleVoice) utterance.voice = maleVoice;
